@@ -26,6 +26,13 @@ namespace GreeterServer
         {
             return Task.FromResult(new HelloReply { Message = "Hello " + request.Name });
         }
+
+        public override Task<GoodbyeReply> SayGoodbye(GoodbyeRequest request, ServerCallContext context)
+        {
+            GoodbyeReply byeBye = new GoodbyeReply();
+            byeBye.Message = "goodbye! " + request.Name;
+            return Task.FromResult(byeBye);
+        }
     }
 
     class Program
@@ -37,7 +44,7 @@ namespace GreeterServer
             Server server = new Server
             {
                 Services = { Greeter.BindService(new GreeterImpl()) },
-                Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
+                Ports = { new ServerPort("0.0.0.0", Port, ServerCredentials.Insecure) }
             };
             server.Start();
 
