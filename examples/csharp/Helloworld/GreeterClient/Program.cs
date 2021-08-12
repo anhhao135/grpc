@@ -88,14 +88,38 @@ namespace GreeterClient
           }
         }
 
+        Console.WriteLine(tempFile);
+
         if (finalFile != tempFile)
         {
           File.Move(tempFile, finalFile);
         }
+
+
+
+
+
+
+      }
+    }
+
+    public static void SaveStreamAsFile(string filePath, Stream inputStream, string fileName)
+    {
+      DirectoryInfo info = new DirectoryInfo(filePath);
+      if (!info.Exists)
+      {
+        info.Create();
+      }
+
+      string path = Path.Combine(filePath, fileName);
+      using (FileStream outputFileStream = new FileStream(path, FileMode.Create))
+      {
+        inputStream.CopyTo(outputFileStream);
       }
     }
 
 
+  }
 
-    }
+
 }
