@@ -27,6 +27,8 @@ service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
 
   rpc SayGoodbye (GoodbyeRequest) returns (GoodbyeReply) {}
+
+  rpc SendCatPic (CatPicRequest) returns (stream ChunkCatPicReply) {}
 }
 
 // The request message containing the user's name.
@@ -45,5 +47,17 @@ message GoodbyeRequest {
 
 message GoodbyeReply {
   string message = 1;
+}
+
+message CatPicRequest {
+  string filePath = 1;
+}
+
+message ChunkCatPicReply {
+  string fileName = 1;
+  int64 fileSize = 2;
+  int32 chunkSize = 3;
+  bytes chunk = 4;
+  bool isCanceled = 5;
 }
 

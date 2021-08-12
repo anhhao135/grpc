@@ -16,6 +16,9 @@ using System;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Helloworld;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace GreeterServer
 {
@@ -32,6 +35,47 @@ namespace GreeterServer
             GoodbyeReply byeBye = new GoodbyeReply();
             byeBye.Message = "goodbye! " + request.Name;
             return Task.FromResult(byeBye);
+        }
+
+        public override async Task SendCatPic(CatPicRequest request, IServerStreamWriter<ChunkCatPicReply> responseStream, ServerCallContext context)
+        {
+            var filePath = "cat.jpg";
+
+            var fileInfo = new FileInfo(filePath);
+
+            var chunk = new ChunkCatPicReply
+            {
+                FileName = Path.GetFileName(filePath),
+                FileSize = fileInfo.Length
+            };
+
+            var chunkSize = 64 * 1024;
+
+            var fileBytes = File.ReadAllBytes(filePath);
+
+            var fileChunk = new byte[chunkSize];
+
+            var offset = 0;
+
+            while (offset < fileBytes.Length)
+            {
+                if (context.CancellationToken.IsCancellationRequested)
+                {
+                  break;
+                }
+
+                var length = Math.Min(chunkSize, fileBytes.Length - offset);
+                Buffer.BlockCopy(fileBytes, offset, fileChunk, 0, length);
+
+                offset += length;
+
+                chunk.ChunkSize = length;
+                chunk.Chunk = Google.Protobuf.ByteString.CopyFrom(fileChunk);
+
+                await responseStream.WriteAsync(chunk).ConfigureAwait(false);
+
+            }
+
         }
     }
 
