@@ -22,13 +22,16 @@ namespace GreeterClient
     {
         public static void Main(string[] args)
         {
-            Channel channel = new Channel("127.0.0.1:30051", ChannelCredentials.Insecure);
+            Channel channel = new Channel("192.0.0.170:30051", ChannelCredentials.Insecure);
 
             var client = new Greeter.GreeterClient(channel);
             String user = "you";
 
             var reply = client.SayHello(new HelloRequest { Name = user });
             Console.WriteLine("Greeting: " + reply.Message);
+
+            var goodbyeReply = client.SayGoodbye(new GoodbyeRequest { Name = "john" });
+            Console.WriteLine(goodbyeReply.Message);
 
             channel.ShutdownAsync().Wait();
             Console.WriteLine("Press any key to exit...");
