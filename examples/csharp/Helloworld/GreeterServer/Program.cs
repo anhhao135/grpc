@@ -39,23 +39,32 @@ namespace GreeterServer
 
         public override async Task SendCatPic(CatPicRequest request, IServerStreamWriter<ChunkCatPicReply> responseStream, ServerCallContext context)
         {
-            var filePath = "cat.jpg";
+
+            Console.WriteLine("starting cat send");
+
+            var filePath = @"C:\Users\hle\OneDrive - Quartus Engineering Incorporated\Desktop\repos\grpc\examples\csharp\Helloworld\GreeterServer\cat.jpg";
+
+      Console.WriteLine(File.Exists(filePath));
 
             var fileInfo = new FileInfo(filePath);
 
-            var chunk = new ChunkCatPicReply
+      Console.WriteLine("done here ");
+
+      var chunk = new ChunkCatPicReply
             {
                 FileName = Path.GetFileName(filePath),
                 FileSize = fileInfo.Length
             };
-
-            var chunkSize = 64 * 1024;
+      Console.WriteLine("done here 0");
+      var chunkSize = 64 * 1024;
 
             var fileBytes = File.ReadAllBytes(filePath);
 
             var fileChunk = new byte[chunkSize];
 
             var offset = 0;
+
+      Console.WriteLine("done here 1");
 
             while (offset < fileBytes.Length)
             {
