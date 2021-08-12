@@ -15,16 +15,30 @@
 using System;
 using Grpc.Core;
 using Helloworld;
+using System.IO;
+using System.Threading.Tasks;
+using Grpc.Net.Client;
 
 namespace GreeterClient
 {
     class Program
     {
-        public static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Channel channel = new Channel("192.0.0.170:30051", ChannelCredentials.Insecure);
+            await GetCatPic(channel);
 
-            var client = new Greeter.GreeterClient(channel);
+            channel.ShutdownAsync().Wait();
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+
+
+      /*
+
+
+
+
+        var client = new Greeter.GreeterClient(channel);
             String user = "you";
 
             var reply = client.SayHello(new HelloRequest { Name = user });
@@ -36,6 +50,52 @@ namespace GreeterClient
             channel.ShutdownAsync().Wait();
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
+
+
+      */
+    }
+
+        public static async Task GetCatPic(Channel channel)
+    {
+      var catClient = new Greeter.GreeterClient(channel);
+
+      var catRequest = new CatPicRequest { FilePath = "null" };
+
+      var tempFile = $"temp.tmp";
+
+      var finalFile = tempFile;
+
+      using (var call = catClient.SendCatPic(catRequest))
+      {
+        await using (var fs = File.OpenWrite(tempFile))
+        {
+          await foreach (var chunk in call.ResponseStream.ReadAllAsync().ConfigureAwait(false))
+          {
+            var totalSize = chunk.FileSize;
+
+            finalFile = chunk.FileName;
+
+            if (chunk.Chunk.Length == chunk.ChunkSize)
+            {
+              fs.Write(chunk.Chunk.ToByteArray());
+            }
+
+            else
+            {
+              fs.Write(chunk.Chunk.ToByteArray(), 0, chunk.ChunkSize);
+              Console.WriteLine("final chunk size: " + chunk.ChunkSize);
+            }
+          }
         }
+
+        if (finalFile != tempFile)
+        {
+          File.Move(tempFile, finalFile);
+        }
+      }
+    }
+
+
+
     }
 }
