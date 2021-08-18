@@ -48,19 +48,23 @@ namespace GreeterServer
 
             var fileInfo = new FileInfo(filePath);
 
-            var chunk = new ChunkCatPicReply
+      Console.WriteLine("done here ");
+
+      var chunk = new ChunkCatPicReply
             {
                 FileName = Path.GetFileName(filePath),
                 FileSize = fileInfo.Length
             };
-
-            var chunkSize = 64 * 1024;
+      Console.WriteLine("done here 0");
+      var chunkSize = 64 * 1024;
 
             var fileBytes = File.ReadAllBytes(filePath);
 
             var fileChunk = new byte[chunkSize];
 
             var offset = 0;
+
+      Console.WriteLine("done here 1");
 
             while (offset < fileBytes.Length)
             {
