@@ -39,7 +39,12 @@ namespace GreeterServer
 
         public override async Task SendCatPic(CatPicRequest request, IServerStreamWriter<ChunkCatPicReply> responseStream, ServerCallContext context)
         {
-            var filePath = "cat.jpg";
+
+            Console.WriteLine("sending cat pic... enter file to send name");
+
+
+
+            var filePath = request.FilePath;
 
             var fileInfo = new FileInfo(filePath);
 

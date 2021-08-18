@@ -25,7 +25,7 @@ namespace GreeterClient
     {
         static async Task Main(string[] args)
         {
-            Channel channel = new Channel("192.0.0.170:30051", ChannelCredentials.Insecure);
+            Channel channel = new Channel("192.0.5.251:30051", ChannelCredentials.Insecure);
             await GetCatPic(channel);
 
             channel.ShutdownAsync().Wait();
@@ -59,7 +59,7 @@ namespace GreeterClient
     {
       var catClient = new Greeter.GreeterClient(channel);
 
-      var catRequest = new CatPicRequest { FilePath = "null" };
+      var catRequest = new CatPicRequest { FilePath = "nebula.tif" };
 
       var tempFile = $"temp.tmp";
 
