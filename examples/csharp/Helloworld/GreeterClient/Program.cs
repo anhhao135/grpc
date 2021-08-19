@@ -18,6 +18,7 @@ using Helloworld;
 using System.IO;
 using System.Threading.Tasks;
 using Grpc.Net.Client;
+using System.Diagnostics;
 
 namespace GreeterClient
 {
@@ -26,7 +27,23 @@ namespace GreeterClient
         static async Task Main(string[] args)
         {
             Channel channel = new Channel("192.0.5.251:30051", ChannelCredentials.Insecure);
-            await GetCatPic(channel);
+
+      Stopwatch stopwatch = new Stopwatch();
+
+      int stressTestCount = 200;
+
+      stopwatch.Start();
+
+            for (int i = 0; i < stressTestCount; i++)
+      {
+        await GetCatPic(channel);
+      }
+
+      stopwatch.Stop();
+
+      Console.WriteLine("took " + stopwatch.ElapsedMilliseconds + "ms");
+      Console.WriteLine("per file took " + stopwatch.ElapsedMilliseconds / stressTestCount + "ms");
+            
 
             channel.ShutdownAsync().Wait();
             Console.WriteLine("Press any key to exit...");
@@ -59,7 +76,7 @@ namespace GreeterClient
     {
       var catClient = new Greeter.GreeterClient(channel);
 
-      var catRequest = new CatPicRequest { FilePath = "nebula.tif" };
+      var catRequest = new CatPicRequest { FilePath = "dmap.bin" };
 
       var tempFile = $"temp.tmp";
 
@@ -92,7 +109,7 @@ namespace GreeterClient
 
         if (finalFile != tempFile)
         {
-          File.Move(tempFile, finalFile);
+          File.Move(tempFile, finalFile, true);
         }
 
 
