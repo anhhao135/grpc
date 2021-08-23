@@ -26,7 +26,7 @@ namespace GreeterClient
     {
         static async Task Main(string[] args)
         {
-            Channel channel = new Channel("192.0.5.251:30051", ChannelCredentials.Insecure);
+            Channel channel = new Channel("u96v2-sbc-base-2020-2:30051", ChannelCredentials.Insecure);
 
       Stopwatch stopwatch = new Stopwatch();
 
