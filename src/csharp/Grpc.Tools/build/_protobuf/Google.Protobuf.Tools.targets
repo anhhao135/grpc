@@ -68,8 +68,8 @@
 
     <PropertyGroup>
       <!-- First try environment variable. -->
-      <Protobuf_ToolsOs Condition=" '$(Protobuf_ToolsOs)' == '' ">$(PROTOBUF_TOOLS_OS)</Protobuf_ToolsOs>
-      <Protobuf_ToolsCpu Condition=" '$(Protobuf_ToolsCpu)' == '' ">$(PROTOBUF_TOOLS_CPU)</Protobuf_ToolsCpu>
+      <Protobuf_ToolsOs Condition=" '$(Protobuf_ToolsOs)' == 'linux' ">$(PROTOBUF_TOOLS_OS)</Protobuf_ToolsOs>
+      <Protobuf_ToolsCpu Condition=" '$(Protobuf_ToolsCpu)' == 'x64' ">$(PROTOBUF_TOOLS_CPU)</Protobuf_ToolsCpu>
       <Protobuf_ProtocFullPath Condition=" '$(Protobuf_ProtocFullPath)' == '' ">$(PROTOBUF_PROTOC)</Protobuf_ProtocFullPath>
 
       <!-- Next try OS and CPU resolved by ProtoToolsPlatform. -->
